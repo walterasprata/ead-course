@@ -1,6 +1,7 @@
 package com.ead.course.services.impl;
 
 import com.ead.course.dtos.CourseRecordDto;
+import com.ead.course.exceptions.NotFoundException;
 import com.ead.course.models.CourseModel;
 import com.ead.course.models.LessonModel;
 import com.ead.course.models.ModuleModel;
@@ -9,6 +10,7 @@ import com.ead.course.repositories.LessonRepository;
 import com.ead.course.repositories.ModuleRepository;
 import com.ead.course.services.CourseService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +71,7 @@ public class CourseServiceImpl implements CourseService {
     public Optional<CourseModel> findById(UUID courseId) {
         Optional<CourseModel> courseModelOptional = courseRepository.findById(courseId);
         if(courseModelOptional.isEmpty()){
-            //exception
+            throw new NotFoundException("Error: Course not found");
         }
         return courseRepository.findById(courseId);
     }

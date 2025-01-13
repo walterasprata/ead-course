@@ -1,6 +1,7 @@
 package com.ead.course.services.impl;
 
 import com.ead.course.dtos.LessonRecordDto;
+import com.ead.course.exceptions.NotFoundException;
 import com.ead.course.models.LessonModel;
 import com.ead.course.models.ModuleModel;
 import com.ead.course.repositories.LessonRepository;
@@ -36,12 +37,12 @@ public class LessonServiceImpl implements LessonService {
     public List<LessonModel> findAllLessonsIntoModule(UUID moduleId) {
         return lessonRepository.findAllLessonsIntoModule(moduleId);
     }
-    @Transactional
+
     @Override
     public Optional<LessonModel> findLessonIntoModule(UUID moduleId, UUID lessonId) {
         Optional<LessonModel> lessonModelOptional = lessonRepository.findLessonIntoModule(moduleId, lessonId);
         if (lessonModelOptional.isEmpty()) {
-            //Exception
+            throw new NotFoundException("Error: Lesson not found for this Module.");
         }
         return lessonModelOptional;
 
