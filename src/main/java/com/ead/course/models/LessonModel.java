@@ -1,6 +1,5 @@
 package com.ead.course.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -24,7 +23,7 @@ public class LessonModel implements Serializable {
     private String description;
     @Column(nullable = false)
     private String videoUrl;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(nullable = false)
     private LocalDateTime creationDate;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
