@@ -9,10 +9,11 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 public class DateConfig {
+
     public static final String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jsonCUstomizer() {
+    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
         return builder -> {
             builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
         };

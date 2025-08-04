@@ -14,16 +14,10 @@ import java.util.UUID;
 public interface ModuleService {
 
     void delete(ModuleModel moduleModel);
-
     ModuleModel save(ModuleRecordDto moduleRecordDto, CourseModel courseModel);
-
     List<ModuleModel> findAllModulesIntoCourse(UUID courseId);
-
     Optional<ModuleModel> findModuleIntoCourse(UUID courseId, UUID moduleId);
-
     ModuleModel update(ModuleRecordDto moduleRecordDto, ModuleModel moduleModel);
-
-    Optional<ModuleModel>findById(UUID moduleId);
-
+    Optional<ModuleModel> findById(UUID moduleId);
     Page<ModuleModel> findAllModulesIntoCourse(Specification<ModuleModel> spec, Pageable pageable);
 }

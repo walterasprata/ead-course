@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,6 +20,7 @@ import java.util.UUID;
 
 @Service
 public class LessonServiceImpl implements LessonService {
+
     final LessonRepository lessonRepository;
 
     public LessonServiceImpl(LessonRepository lessonRepository) {
@@ -33,6 +33,7 @@ public class LessonServiceImpl implements LessonService {
         BeanUtils.copyProperties(lessonRecordDto, lessonModel);
         lessonModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         lessonModel.setModule(moduleModel);
+
         return lessonRepository.save(lessonModel);
     }
 
@@ -44,14 +45,12 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Optional<LessonModel> findLessonIntoModule(UUID moduleId, UUID lessonId) {
         Optional<LessonModel> lessonModelOptional = lessonRepository.findLessonIntoModule(moduleId, lessonId);
-        if (lessonModelOptional.isEmpty()) {
+        if (lessonModelOptional.isEmpty()){
             throw new NotFoundException("Error: Lesson not found for this Module.");
         }
         return lessonModelOptional;
-
-
     }
-    @Transactional
+
     @Override
     public void delete(LessonModel lessonModel) {
         lessonRepository.delete(lessonModel);
@@ -67,4 +66,5 @@ public class LessonServiceImpl implements LessonService {
     public Page<LessonModel> findAllLessonsIntoModule(Specification<LessonModel> spec, Pageable pageable) {
         return lessonRepository.findAll(spec, pageable);
     }
+
 }

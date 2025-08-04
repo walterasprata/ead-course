@@ -23,6 +23,7 @@ import java.util.UUID;
 
 @Service
 public class ModuleServiceImpl implements ModuleService {
+
     final ModuleRepository moduleRepository;
     final LessonRepository lessonRepository;
 
@@ -35,7 +36,7 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public void delete(ModuleModel moduleModel) {
         List<LessonModel> lessonModelList = lessonRepository.findAllLessonsIntoModule(moduleModel.getModuleId());
-        if(!lessonModelList.isEmpty()){
+        if (!lessonModelList.isEmpty()){
             lessonRepository.deleteAll(lessonModelList);
         }
         moduleRepository.delete(moduleModel);
@@ -47,6 +48,7 @@ public class ModuleServiceImpl implements ModuleService {
         BeanUtils.copyProperties(moduleRecordDto, moduleModel);
         moduleModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         moduleModel.setCourse(courseModel);
+
         return moduleRepository.save(moduleModel);
     }
 
@@ -58,7 +60,7 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public Optional<ModuleModel> findModuleIntoCourse(UUID courseId, UUID moduleId) {
         Optional<ModuleModel> moduleModelOptional = moduleRepository.findModuleIntoCourse(courseId, moduleId);
-        if (moduleModelOptional.isEmpty()) {
+        if(moduleModelOptional.isEmpty()){
             throw new NotFoundException("Error: Module not found for this Course.");
         }
         return moduleModelOptional;
@@ -73,7 +75,7 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public Optional<ModuleModel> findById(UUID moduleId) {
         Optional<ModuleModel> moduleModelOptional = moduleRepository.findById(moduleId);
-        if(moduleModelOptional.isEmpty()){
+        if (moduleModelOptional.isEmpty()){
             throw new NotFoundException("Error: Module not found.");
         }
         return moduleModelOptional;
@@ -83,4 +85,6 @@ public class ModuleServiceImpl implements ModuleService {
     public Page<ModuleModel> findAllModulesIntoCourse(Specification<ModuleModel> spec, Pageable pageable) {
         return moduleRepository.findAll(spec, pageable);
     }
+
+
 }

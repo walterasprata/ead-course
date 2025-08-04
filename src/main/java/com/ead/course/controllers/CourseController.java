@@ -20,6 +20,7 @@ import java.util.UUID;
 public class CourseController {
 
     Logger logger = LogManager.getLogger(CourseController.class);
+
     final CourseService courseService;
 
     public CourseController(CourseService courseService) {
@@ -27,37 +28,46 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveCourse(@Valid @RequestBody CourseRecordDto courseRecordDto) {
+    public ResponseEntity<Object> saveCourse(@RequestBody @Valid CourseRecordDto courseRecordDto){
         logger.debug("POST saveCourse courseRecordDto received {} ", courseRecordDto);
-        if (courseService.existsByName(courseRecordDto.name())) {
+        if(courseService.existsByName(courseRecordDto.name())){
             logger.warn("Course Name {} is Already Taken ", courseRecordDto.name());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Course Name is Already Taken!");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Error: Course Name is Already Taken!");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(courseService.save(courseRecordDto));
     }
 
     @GetMapping
-    public ResponseEntity<Page<CourseModel>> getAllCourses(SpecificationTemplate.CourseSpec spec, Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(courseService.findAll(spec, pageable));
+    public ResponseEntity<Page<CourseModel>> getAllCourses(SpecificationTemplate.CourseSpec spec,
+                                                           Pageable pageable,
+                                                           @RequestParam(required = false) UUID userId){
+        Page<CourseModel> courseModelPage = (userId != null)
+                ? courseService.findAll(SpecificationTemplate.courseUserId(userId).and(spec), pageable)
+                : courseService.findAll(spec, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(courseModelPage);
     }
 
     @GetMapping("/{courseId}")
-    public ResponseEntity<Object> getOneCourse(@PathVariable(value = "courseId") UUID courseId) {
+    public ResponseEntity<Object> getOneCourse(@PathVariable(value = "courseId") UUID courseId){
         return ResponseEntity.status(HttpStatus.OK).body(courseService.findById(courseId).get());
     }
 
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<Object> deleteCourse(@PathVariable(value = "courseId") UUID courseId) {
-        courseService.delete(courseService.findById(courseId).get());
+    public ResponseEntity<Object> deleteCourse(@PathVariable(value = "courseId") UUID courseId){
         logger.debug("DELETE deleteCourse courseId received {} ", courseId);
+        courseService.delete(courseService.findById(courseId).get());
         return ResponseEntity.status(HttpStatus.OK).body("Course deleted successfully.");
     }
 
     @PutMapping("/{courseId}")
     public ResponseEntity<Object> updateCourse(@PathVariable(value = "courseId") UUID courseId,
-                                               @RequestBody @Valid CourseRecordDto courseRecordDto) {
+                                               @RequestBody @Valid CourseRecordDto courseRecordDto){
         logger.debug("PUT updateCourse courseRecordDto received {} ", courseRecordDto);
-        return ResponseEntity.status(HttpStatus.OK).body(courseService.update(courseRecordDto, courseService.findById(courseId).get()));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(courseService.update(courseRecordDto, courseService.findById(courseId).get()));
     }
+
+
 
 }

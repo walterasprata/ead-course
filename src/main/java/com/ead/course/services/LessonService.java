@@ -10,18 +10,13 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public interface LessonService {
+
     LessonModel save(LessonRecordDto lessonRecordDto, ModuleModel moduleModel);
-
     List<LessonModel> findAllLessonsIntoModule(UUID moduleId);
-
     Optional<LessonModel> findLessonIntoModule(UUID moduleId, UUID lessonId);
-
     void delete(LessonModel lessonModel);
-
     LessonModel update(LessonRecordDto lessonRecordDto, LessonModel lessonModel);
-
     Page<LessonModel> findAllLessonsIntoModule(Specification<LessonModel> spec, Pageable pageable);
 }
